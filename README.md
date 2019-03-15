@@ -1,6 +1,6 @@
 This range-v3 views allow to put some "anchor"/"label"/"tag" in your view compsition sequence. And provide facilities to back to that point.
 
-Implemented as chain of `view`'s base() calls.
+Implemented as chain of `view` base() calls.
 
 # Motivation examples
 
