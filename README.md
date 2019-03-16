@@ -135,6 +135,6 @@ auto list = vec
 REQUIRE(list.begin().origin() == vec.begin());
 ```
 
-### Perfoemance overhead
+### Perfomance overhead
 
 Not measured yet. Chain of n `base()` calls (`base().base().base()`), should fold to O(1) in release mode, because all view types are statically known, and all iterator/view offsets/memory locations are known.
