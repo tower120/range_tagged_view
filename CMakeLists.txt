@@ -17,3 +17,5 @@ file(GLOB TEST_SRC test/*.cpp)
 #enable_testing()
 
 add_executable(TEST-ALL ${INCLUDE_SRC} ${TEST_SRC})
+
+add_executable(console ${INCLUDE_SRC} console/main.cpp)

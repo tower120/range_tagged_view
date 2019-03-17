@@ -77,7 +77,7 @@ namespace experimental::ranges::view
     };
 
     template<class Tag = details::default_tag>
-    inline constexpr const ::ranges::view::view<tag_fn<Tag>> tag;
+	inline constexpr const ::ranges::view::view<tag_fn<Tag>> tag{};
 }
 
 namespace experimental::ranges
