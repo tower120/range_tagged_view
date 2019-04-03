@@ -9,6 +9,9 @@ namespace experimental::ranges::view
 {
     namespace details{
         struct default_tag{};
+
+        template<class Rng>
+        bool may_dangle = std::is_same_v<::ranges::safe_iterator_t<Rng>, ::ranges::iterator_t<Rng>>;
     }
 
     struct tag_view_access{
@@ -33,7 +36,7 @@ namespace experimental::ranges::view
             }();
     };
 
-    template<class Rng, class Tag = details::default_tag>
+    template<class Rng, class Tag = details::default_tag, bool may_dangle_ = details::may_dangle<Rng>>
     class tag_view
         : public ::ranges::view_adaptor<tag_view<Rng, Tag>, Rng>
     {
@@ -50,7 +53,8 @@ namespace experimental::ranges::view
                 friend tag_view_access;
                 using tag = Tag;
             private:
-                static const constexpr tag_view_access::tag_view_mark_t tag_view_mark{};
+                static const constexpr bool may_dangle = may_dangle_;
+                static const constexpr tag_view_access::tag_view_mark_t tag_view_mark;
             };
         };
 
@@ -70,7 +74,7 @@ namespace experimental::ranges::view
         {
             using namespace ::ranges::view;
 
-            return tag_view<all_t<Rng>, Tag>(
+            return tag_view<all_t<Rng>, Tag, details::may_dangle<Rng>>(
                 all(static_cast<Rng&&>(rng))
             );
         }
