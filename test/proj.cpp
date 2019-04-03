@@ -28,13 +28,13 @@ TEST_CASE( "testing view::tag traits") {
             | ::ranges::view::transform([](int i) { return -i; });
 
         REQUIRE(!is_proj_range<decltype(rng)>);
+        REQUIRE(project(rng.begin()) == vec.begin());
     }
 
     {
         auto rng =
             vec
             | ::ranges::view::transform([](int i) { return -i; });
-
 
         auto found = ::ranges::find_if(rng,
             [](int i) -> bool
