@@ -65,12 +65,12 @@ int main(){
        | view::base_n<4>;
 */
 
-/*
+
     auto list =
             ranges::view::zip(i1, i2)
             | view::push_base
                 | view::keys
-                | view::unique
+                /*| view::unique
                 | view::transform([](int i){ return -i;})
                 | view::tag<k1>
             | view::pop_base
@@ -79,10 +79,10 @@ int main(){
                 | view::unique
                 | view::transform([](int i){ return std::to_string(i) + "n";})
                 | view::tag<k2>
-            | view::pop_base;
-*/
-/*
-    auto list =
+            | view::pop_base*/;
+
+
+    /*auto list =
         ranges::view::zip(i1, i2)
         | view::push_base
             | view::keys
@@ -98,8 +98,16 @@ int main(){
         | view::pop_base
         | forward_iterator | view::transform([](auto&& iter){
             return std::make_pair(*tag_base<k1>(iter), *tag_base<k2>(iter));
-          });
-*/
+          });*/
+
+    /*auto list = i1 | view::push_base
+                | view::unique
+                | view::transform([](int i){ return -i;})
+                | view::pop_base;*/
+
+    std::cout << sizeof(ranges::view::zip(i1, i2).begin()) << std::endl;
+    std::cout << sizeof(list.begin()) << std::endl;
+
 /*
     auto list =
         ranges::view::zip(i1, i2)
@@ -120,7 +128,7 @@ int main(){
           });
 */
 
-    for(auto[key, value] : list){
+    /*for(auto[key, value] : list){
         std::cout << key << " : " << value << ", ";
-    }
+    }*/
 }
