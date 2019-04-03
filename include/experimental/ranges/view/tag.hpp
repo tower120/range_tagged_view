@@ -11,13 +11,13 @@ namespace experimental::ranges::view
         struct default_tag{};
 
         template<class Rng>
-        bool may_dangle = std::is_same_v<::ranges::safe_iterator_t<Rng>, ::ranges::iterator_t<Rng>>;
+        constexpr bool may_dangle = !std::is_same_v<::ranges::safe_iterator_t<Rng>, ::ranges::iterator_t<Rng>>;
     }
 
     struct tag_view_access{
         struct tag_view_mark_t{};
 
-        template<typename T, typename = void>
+        template<typename Iter, typename = void>
         struct have_tag_view_mark : std::false_type {};
 
         template<class Iter>
@@ -36,9 +36,9 @@ namespace experimental::ranges::view
             }();
     };
 
-    template<class Rng, class Tag = details::default_tag, bool may_dangle_ = details::may_dangle<Rng>>
+    template<class Rng, class Tag = details::default_tag, bool may_dangle_ = true>
     class tag_view
-        : public ::ranges::view_adaptor<tag_view<Rng, Tag>, Rng>
+        : public ::ranges::view_adaptor<tag_view<Rng, Tag, may_dangle_>, Rng>
     {
         friend ::ranges::range_access;
 
@@ -52,9 +52,11 @@ namespace experimental::ranges::view
 
                 friend tag_view_access;
                 using tag = Tag;
+
+                inline static const constexpr bool may_dangle{may_dangle_};
+                //inline static const constexpr bool may_dangle{false};
             private:
-                static const constexpr bool may_dangle = may_dangle_;
-                static const constexpr tag_view_access::tag_view_mark_t tag_view_mark;
+                static const constexpr tag_view_access::tag_view_mark_t tag_view_mark{};
             };
         };
 
@@ -88,8 +90,8 @@ namespace experimental::ranges
 {
     template<typename>
     struct is_tag_view : std::false_type {};
-    template<class Rng, class Tag>
-    struct is_tag_view<view::tag_view<Rng, Tag>> : std::true_type {};
+    template<class Rng, class Tag, bool may_dangle>
+    struct is_tag_view<view::tag_view<Rng, Tag, may_dangle>> : std::true_type {};
 
     template<class T>
     constexpr const bool is_tag_view_v = is_tag_view<T>::value;

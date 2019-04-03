@@ -33,8 +33,15 @@ namespace experimental::ranges{
     }
 
 
+    template<typename Iter, typename = void>
+    struct have_base : std::false_type {};
+
+    template<class Iter>
+    struct have_base< Iter, std::void_t<decltype( std::declval<Iter>().base() )> > : std::true_type {};
+
+
     template<class Tag = view::details::default_tag, class Iterator>
-    decltype(auto) tag_base_iterator(Iterator&& iterator){
+    constexpr decltype(auto) find_view_tag_iterator(Iterator&& iterator) noexcept {
         using I = std::decay_t<Iterator>;
         static_assert(::ranges::Iterator<I>::value, "Iterator must be Iterator / Tag not founded.");
 
@@ -49,10 +56,19 @@ namespace experimental::ranges{
         };
 
         if constexpr (found()){
-            return iterator.base();
+            return iterator;
         } else {
-            return tag_base_iterator<Tag>(iterator.base());
+            if constexpr(have_base<I>::value){
+                return find_view_tag_iterator<Tag>(iterator.base());
+            } else {
+                return;
+            }
         }
+    }
+
+    template<class Tag = view::details::default_tag, class Iterator>
+    decltype(auto) tag_base_iterator(Iterator&& iterator){
+        return find_view_tag_iterator<Tag>(std::forward<Iterator>(iterator)).base();
     }
 
 
