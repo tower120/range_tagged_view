@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 
+#include <experimental/ranges/view/proj.hpp>
 #include <range/v3/algorithm/find_if.hpp>
 #include <range/v3/view/transform.hpp>
 
@@ -27,7 +28,7 @@ TEST_CASE( "testing view::tag traits") {
             view::proj(vec)
             | ::ranges::view::transform([](int i) { return -i; });
 
-        REQUIRE(!is_proj_range<decltype(rng)>);
+        REQUIRE(is_proj_range<decltype(rng)>);
         REQUIRE(project(rng.begin()) == vec.begin());
     }
 

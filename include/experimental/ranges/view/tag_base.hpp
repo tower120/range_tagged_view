@@ -73,7 +73,7 @@ namespace experimental::ranges{
 
 
     template<class Tag = view::details::default_tag, class Iterator>
-    decltype(auto) tag_base(Iterator&& iterator){
+    decltype(auto) tag_base(Iterator&& iterator, const Tag& = Tag()){
         return tag_base_iterator<Tag>(std::forward<Iterator>(iterator));
     }
 
@@ -119,11 +119,20 @@ namespace experimental::ranges::view
     };
 
 
-    template<class Tag>
     struct tag_base_fn
     {
-        template<typename Rng>
-        decltype(auto) operator()(Rng&& rng) const
+    private:
+        friend ::ranges::view::view_access;
+
+        template<class Tag>
+        static decltype(auto) bind(tag_base_fn tag_base, const Tag& t)
+        {
+            return ::ranges::make_pipeable(std::bind(tag_base, std::placeholders::_1, t));
+        }
+    public:
+
+        template<class Rng, class Tag = details::default_tag>
+        decltype(auto) operator()(Rng&& rng, const Tag& = Tag{}) const
         {
             using namespace ::ranges::view;
 
@@ -133,7 +142,6 @@ namespace experimental::ranges::view
         }
     };
 
-    template<class Tag = details::default_tag>
-    inline constexpr const ::ranges::view::view<tag_base_fn<Tag>> tag_base;
+    inline constexpr const ::ranges::view::view<tag_base_fn> tag_base;
 
 }

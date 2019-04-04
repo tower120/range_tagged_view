@@ -68,11 +68,19 @@ namespace experimental::ranges::view
         using tag_view::view_adaptor::view_adaptor;
     };
 
-    template<class Tag>
     struct tag_fn
     {
-        template<typename Rng>
-        decltype(auto) operator()(Rng&& rng) const
+    private:
+        friend ::ranges::view::view_access;
+
+        template<class Tag>
+        static decltype(auto) bind(tag_fn tag, const Tag& t)
+        {
+            return ::ranges::make_pipeable(std::bind(tag, std::placeholders::_1, t));
+        }
+    public:
+        template<class Rng, class Tag = details::default_tag>
+        decltype(auto) operator()(Rng&& rng, const Tag& = Tag{}) const
         {
             using namespace ::ranges::view;
 
@@ -82,8 +90,7 @@ namespace experimental::ranges::view
         }
     };
 
-    template<class Tag = details::default_tag>
-    inline constexpr const ::ranges::view::view<tag_fn<Tag>> tag;
+    inline constexpr const ::ranges::view::view<tag_fn> tag;
 }
 
 namespace experimental::ranges

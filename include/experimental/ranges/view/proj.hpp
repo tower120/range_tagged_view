@@ -6,10 +6,11 @@
 namespace experimental::ranges::view
 {
     namespace details{
-        struct proj_tag{};
+        using proj_tag = default_tag;
+        //struct proj_tag{};
     }
 
-    inline constexpr const auto proj = tag<details::proj_tag>;
+    inline constexpr const auto proj = tag/*<details::proj_tag>*/;
 }
 
 namespace experimental::ranges
@@ -20,7 +21,9 @@ namespace experimental::ranges
     >;
 
     template<class Rng>
-    constexpr const bool proj_range_may_dangle = std::decay_t<decltype(find_view_tag_iterator<view::details::proj_tag>(std::declval<Rng>().begin()))>::may_dangle;
+    constexpr const bool proj_range_may_dangle =
+            view::details::may_dangle<Rng> &&
+            std::decay_t<decltype(find_view_tag_iterator<view::details::proj_tag>(std::declval<Rng>().begin()))>::may_dangle;
 
     template<class Rng>
     decltype(auto) project(Rng&& rng){

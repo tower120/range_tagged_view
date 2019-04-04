@@ -12,9 +12,10 @@
 TEST_CASE( "testing view::tag traits") {
     using namespace experimental::ranges;
 
-    std::vector<int> vec = {1,2,3};
+    using Vec = std::vector<int>;
+    Vec vec = {1,2,3};
 
-    auto list = view::tag<void>(vec);
+    auto list = view::tag(vec);
 
     REQUIRE(is_tag_view_v<decltype(list)>);
     REQUIRE(is_tag_view_iterator_v<decltype(list.begin())>);

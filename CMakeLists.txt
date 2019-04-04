@@ -16,4 +16,12 @@ file(GLOB TEST_SRC test/*.cpp)
 
 #enable_testing()
 
-add_executable(TEST-ALL ${INCLUDE_SRC} ${TEST_SRC})
+#add_executable(TEST-ALL ${INCLUDE_SRC} ${TEST_SRC})
+add_executable(TEST-ALL ${INCLUDE_SRC}
+    test/main.cpp
+    test/view_tag.cpp
+    test/view_tag_base.cpp
+    test/proj.cpp
+    test/find_if.cpp
+    test/push_pop_base.cpp
+)

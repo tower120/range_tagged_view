@@ -15,7 +15,7 @@ TEST_CASE("testing tag_base") {
     std::vector<int> vec = {1,2,3};
 
     auto list = vec
-                | view::tag<>
+                | view::tag
                 | ranges::view::transform([](int i) -> std::pair<int, int>{
                     return {i,i};
                 });
@@ -35,12 +35,14 @@ TEST_CASE( "testing view::tag_base") {
 
     std::vector<int> vec = {1,2,3};
 
+    struct{} p;
+
     auto list = vec
-                | view::tag<void>
+                | view::tag(p)
                 | ranges::view::transform([](int i) {
                         return i+10;
                    })
-                | view::tag_base<void>;
+                | view::tag_base(p);
 
     REQUIRE(ranges::equal(list, {1,2,3}));
     REQUIRE(list.begin().origin() == vec.begin());
