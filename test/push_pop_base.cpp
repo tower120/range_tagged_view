@@ -15,7 +15,7 @@
 #include <experimental/ranges/view/pop_base.hpp>
 
 
-// This builds 2 min. Require 5Gb memory.
+// This builds 2 min. Require 5Gb of memory.
 
 
 namespace ranges{
@@ -104,7 +104,7 @@ TEST_CASE("complex push/pop/tag base") {
             | view::transform([](int i){ return std::to_string(i) + "n";})
             | view::tag(k2)
         | view::pop_base
-        | forward_iterator | view::transform([](auto&& iter){
+        | forward_iterator | view::transform([k1, k2](auto&& iter){
             return std::make_pair(*tag_base(iter, k1), *tag_base(iter, k2));
           });
 
@@ -113,4 +113,3 @@ TEST_CASE("complex push/pop/tag base") {
         pair(-10, "100n"), pair(-20, "200n"), pair(-30, "300n")
     }));
 }
-
