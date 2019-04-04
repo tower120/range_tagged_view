@@ -45,8 +45,8 @@ namespace experimental::ranges
     }
 
     template<class Iterator, class Rng>
-    decltype(auto) project_to(Iterator&& iterator, const Rng&){
-        using I = decltype(std::declval<Rng>().begin());
+    decltype(auto) project_to(Iterator&& iterator, const Rng& rng){
+        using I = std::decay_t<decltype(rng.begin())>;
         return project_to<I>(iterator);
     }
 
