@@ -27,10 +27,8 @@ range-v3 comes with optional projection argument for all algorithms. But project
 
 Direct comparison with projection:
 ```cpp
-List::iterator found = tag_base(find(
-     list
-     | view::tag 
-     | view::transform(&Data::i), 2
+List::iterator found = tag_base(find(     
+     view::tag(list) | view::transform(&Data::i), 2
 ));
 ```
 ```cpp
